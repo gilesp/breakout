@@ -1,8 +1,10 @@
 import Bat from './bat.js';
 import Ball from './ball.js';
+import Block from './block.js';
 
 var bat = new Bat(50, 5);
 var ball = new Ball(bat, 5, 'rgb(200, 0, 0)');
+var blocks = [];
 
 var animationToken;
 var canvas = { width: 640, height: 480 }; //fake it until set properly
@@ -65,6 +67,24 @@ function start() {
 	return;
     }
 
+    //create blocks;
+    // TODO: make this less crap ;-)
+    var i;
+    var row;
+    var xPos = 20;
+    var yPos = 50;
+    var colors = ['rgb(230, 0, 0)', 'rgb(230, 115, 0)', 'rgb(230, 230, 0)', 'rgb(38, 230, 0)', 'rgb(0, 38, 230)'];
+    var blockWidth = 55;
+    var blockHeight = 25;
+
+    for (row = 0; row < 5; row++) {
+	xPos = 20;
+	for (i = 0; i < 10; i++) {
+	    blocks.push(new Block(xPos, yPos, blockWidth, blockHeight, colors[row]));
+	    xPos += blockWidth + 5;
+	}
+	yPos += blockHeight + 5;
+    }
     // setup initial positions
     bat.x = (canvas.width / 2) - (bat.width / 2);
     bat.y = canvas.height - 20;
@@ -93,6 +113,10 @@ function render() {
 	bat.draw(ctx);
 
 	ball.draw(ctx);
+
+	blocks.forEach(function (block) {
+	    block.draw(ctx);
+	});
 	
 	//display fps
 	fpsDisplay.textContent = Math.round(fps) + ' FPS';
