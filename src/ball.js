@@ -44,14 +44,6 @@ class Ball {
 	    this.vy = -this.vy;
 	}
 	
-	//insanely inefficient collision detection for the blocks
-	blocks.forEach(function (block, index) {
-	    if (block.check(this.x - this.radius, this.y)) {
-		delete blocks[index];
-		this.vy = -this.vy;
-	    }
-	}, this);
-	
 	// the ball has gone out of bounds
 	if (this.y >= canvas.height) {
 	    this.initialise(bat);

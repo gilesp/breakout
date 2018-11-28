@@ -24,6 +24,8 @@ var fps = 60,
     delta = 0,
     lastFrameTime = 0;
 
+var score = 0;
+
 function main(timestamp) {
     // Throttle the frame rate.
     if (timestamp < (lastFrameTime + timestep)) {
@@ -106,6 +108,14 @@ function panic() {
 
 function update(delta) {
     ball.update(canvas, delta, bat, blocks);
+    //insanely inefficient collision detection for the blocks
+    blocks.forEach(function (block, index) {
+	if (block.check(ball.x - ball.radius, ball.y)) {
+	    delete blocks[index];
+	    ball.vy = -ball.vy;
+	    score += 5;
+	}
+    });
 }
 
 function render() {
@@ -119,7 +129,10 @@ function render() {
 	blocks.forEach(function (block) {
 	    block.draw(ctx);
 	});
-	
+
+	ctx.fillStyle = 'rgb(255, 255, 255)';
+	ctx.font = '22px sans';
+	ctx.fillText('Score: ' + score, 20, 25);
 	//display fps
 	fpsDisplay.textContent = Math.round(fps) + ' FPS';
     }
