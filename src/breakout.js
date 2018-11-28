@@ -1,72 +1,11 @@
+import bat from './bat.js';
+import ball from './ball.js';
+
 var animationToken;
-var delta = 0;
-var lastFrameTime = 0;
 var canvas = { width: 640, height: 480 }; //fake it until set properly
 var ctx;
 
-var bat = {
-    width: 50,
-    height: 5,
-    x: 0,
-    y: 0,
-    velocity: 2,
-    draw: function (ctx) {
-	ctx.fillStyle = 'rgb(200, 200, 200)';
-	ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-};
-
-var ball = {
-    x: 0,
-    y: 0,
-    radius: 5,
-    color: 'rgb(200, 0, 0)',
-    vx: 0,
-    vy: 0,
-    inMotion: false,
-    draw: function (ctx) {
-	ctx.beginPath();
-	ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-	ctx.closePath();
-	ctx.fillStyle = this.color;
-	ctx.fill();
-    },
-    initialise: function () {
-	this.inMotion = false;
-	this.x = bat.x + (bat.width / 2);
-	this.y = bat.y - this.radius;
-	this.vx = 0.2;
-	this.vy = -0.2;
-    },
-    update: function (delta) {
-	if (!this.inMotion) {
-	    // follow the bat.
-	    this.x = bat.x + (bat.width / 2);
-	    return;
-	}
-	this.x += this.vx * delta;
-	this.y += this.vy * delta;
-
-	if (this.x <= 0 || this.x >= canvas.width) {
-	    this.vx = -this.vx;
-	}
-
-	if (this.y <= 0) {
-	    this.vy = -this.vy;
-	}
-
-	//primitive collision detection with bat
-	if (this.y === (bat.y - this.radius) &&
-	    (this.x >= bat.x && this.x <= bat.x + bat.width)) {
-	    this.vy = -this.vy;
-	}
-
-	// the ball has gone out of bounds
-	if (this.y >= canvas.height) {
-	    this.initialise();
-	}
-    }
-};
+var fpsDisplay = document.getElementById('fpsDisplay');
 
 // The maximum FPS we want to allow
 var maxFPS = 60; 
@@ -74,11 +13,11 @@ var maxFPS = 60;
 // simulate 1000 ms / 60 FPS = 16.667 ms per frame every time we run update()
 var timestep = 1000 / maxFPS; 
 
-var fpsDisplay = document.getElementById('fpsDisplay');
-
 var fps = 60,
     framesThisSecond = 0,
-    lastFpsUpdate = 0;
+    lastFpsUpdate = 0,
+    delta = 0,
+    lastFrameTime = 0;
 
 function main(timestamp) {
     // Throttle the frame rate.
@@ -126,7 +65,7 @@ function start() {
     // setup initial positions
     bat.x = (canvas.width / 2) - (bat.width / 2);
     bat.y = canvas.height - 20;
-    ball.initialise();
+    ball.initialise(bat);
     
     main(0);
 }
@@ -141,7 +80,7 @@ function panic() {
 }
 
 function update(delta) {
-    ball.update(delta);
+    ball.update(canvas, delta, bat);
 }
 
 function render() {
