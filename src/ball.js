@@ -1,35 +1,32 @@
-var ball = {
-    x: 0,
-    y: 0,
-    lastX: 0,
-    lastY: 0,
-    radius: 5,
-    color: 'rgb(200, 0, 0)',
-    vx: 0,
-    vy: 0,
-    inMotion: false,
-    draw: function (ctx) {
-	ctx.beginPath();
-	ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-	ctx.closePath();
-	ctx.fillStyle = this.color;
-	ctx.fill();
-    },
-    initialise: function (bat) {
+class Ball {
+    constructor(bat, radius, color) {
+	this.radius = radius;
+	this.color = color;
+	this.initialise(bat);
+    }
+
+    draw(context) {
+	context.beginPath();
+	context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+	context.closePath();
+	context.fillStyle = this.color;
+	context.fill();
+    }
+
+    initialise(bat) {
 	this.inMotion = false;
 	this.x = bat.x + (bat.width / 2);
 	this.y = bat.y - this.radius;
 	this.vx = 0.2;
 	this.vy = -0.2;
-    },
-    update: function (canvas, delta, bat) {
+    }
+
+    update(canvas, delta, bat) {
 	if (!this.inMotion) {
 	    // follow the bat.
 	    this.x = bat.x + (bat.width / 2);
 	    return;
 	}
-	this.lastX = this.x;
-	this.lastY = this.y;
 	this.x += this.vx * delta;
 	this.y += this.vy * delta;
 
@@ -52,6 +49,6 @@ var ball = {
 	    this.initialise(bat);
 	}
     }
-};
+}
 
-export default ball;
+export default Ball;

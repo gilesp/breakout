@@ -1,5 +1,8 @@
-import bat from './bat.js';
-import ball from './ball.js';
+import Bat from './bat.js';
+import Ball from './ball.js';
+
+var bat = new Bat(50, 5);
+var ball = new Ball(bat, 5, 'rgb(200, 0, 0)');
 
 var animationToken;
 var canvas = { width: 640, height: 480 }; //fake it until set properly
