@@ -45,10 +45,9 @@ class Ball {
 	}
 	
 	//insanely inefficient collision detection for the blocks
-	blocks.forEach(function (block) {
-	    //console.log(`ball ${this.x}, ${this.y} : block ${block.x}, ${block.y}`);
-	    if (this.y === (block.y + block.height) &&
-		(this.x >= block.x && this.x <= block.x + block.width)) {
+	blocks.forEach(function (block, index) {
+	    if (block.check(this.x - this.radius, this.y)) {
+		delete blocks[index];
 		this.vy = -this.vy;
 	    }
 	}, this);

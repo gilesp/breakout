@@ -2,8 +2,8 @@ import Bat from './bat.js';
 import Ball from './ball.js';
 import Block from './block.js';
 
-var bat = new Bat(50, 5);
-var ball = new Ball(bat, 5, 'rgb(200, 0, 0)');
+var bat = new Bat(60, 8);
+var ball = new Ball(bat, 7, 'rgb(200, 0, 0)');
 var blocks = [];
 
 var animationToken;
@@ -77,6 +77,7 @@ function start() {
     var blockWidth = 55;
     var blockHeight = 25;
 
+    
     for (row = 0; row < 5; row++) {
 	xPos = 20;
 	for (i = 0; i < 10; i++) {
@@ -85,6 +86,7 @@ function start() {
 	}
 	yPos += blockHeight + 5;
     }
+    
     // setup initial positions
     bat.x = (canvas.width / 2) - (bat.width / 2);
     bat.y = canvas.height - 20;
