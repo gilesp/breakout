@@ -16,7 +16,8 @@ module.exports = {
     plugins: [
 	new CleanWebpackPlugin(['dist']),
 	new HtmlWebpackPlugin({
-	    title: 'Breakout'
+	    title: 'Breakout',
+	    template: 'index.html'
 	}),
 	new CopyWebpackPlugin([
 	    {
