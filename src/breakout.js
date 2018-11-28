@@ -1,15 +1,71 @@
 var animationToken;
 var delta = 0;
 var lastFrameTime = 0;
-var canvas;
+var canvas = { width: 640, height: 480 }; //fake it until set properly
 var ctx;
 
 var bat = {
     width: 50,
     height: 5,
-    x: 295,
-    y: 460,
-    velocity: 1
+    x: 0,
+    y: 0,
+    velocity: 1.5,
+    draw: function (ctx) {
+	ctx.fillStyle = 'rgb(200, 200, 200)';
+	ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+};
+
+var ball = {
+    x: 0,
+    y: 0,
+    radius: 5,
+    color: 'rgb(200, 0, 0)',
+    vx: 0,
+    vy: 0,
+    inMotion: false,
+    draw: function (ctx) {
+	ctx.beginPath();
+	ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+	ctx.closePath();
+	ctx.fillStyle = this.color;
+	ctx.fill();
+    },
+    initialise: function () {
+	this.inMotion = false;
+	this.x = bat.x + (bat.width / 2);
+	this.y = bat.y - this.radius;
+	this.vx = 0.2;
+	this.vy = -0.2;
+    },
+    update: function (delta) {
+	if (this.inMotion) {
+	    this.x += this.vx * delta;
+	    this.y += this.vy * delta;
+
+	    if (this.x <= 0 || this.x >= canvas.width) {
+		this.vx = -this.vx;
+	    }
+
+	    if (this.y <= 0) {
+		this.vy = -this.vy;
+	    }
+
+	    //primitive collision detection with bat
+	    if (this.y === (bat.y - this.radius) &&
+		(this.x >= bat.x && this.x <= bat.x + bat.width)) {
+		this.vy = -this.vy;
+	    }
+
+	    // the ball has gone out of bounds
+	    if (this.y >= canvas.height) {
+		this.initialise();
+	    }
+	} else {
+	    // follow the bat.
+	    this.x = bat.x + (bat.width / 2);
+	}
+    }
 };
 
 // The maximum FPS we want to allow
@@ -62,6 +118,16 @@ function calcFPS(timestamp) {
 }
 
 function start() {
+    if (!canvas) {
+	console.error("No canvas defined.");
+	return;
+    }
+
+    // setup initial positions
+    bat.x = (canvas.width / 2) - (bat.width / 2);
+    bat.y = canvas.height - 20;
+    ball.initialise();
+    
     main(0);
 }
 
@@ -75,20 +141,17 @@ function panic() {
 }
 
 function update(delta) {
-    // bat.x += bat.velocity * delta;
-    // if (bat.x >= 590 || bat.x <= 0) {
-    // 	bat.velocity = -bat.velocity;
-    // }
+    ball.update(delta);
 }
 
 function render() {
     if (ctx) {
 	ctx.clearRect(0, 0, 640, 480);
 
-	//draw bat
-	ctx.fillStyle = 'rgb(200, 200, 200)';
-	ctx.fillRect(bat.x, bat.y, bat.width, bat.height);
+	bat.draw(ctx);
 
+	ball.draw(ctx);
+	
 	//display fps
 	fpsDisplay.textContent = Math.round(fps) + ' FPS';
     }
@@ -96,7 +159,8 @@ function render() {
 
 function setCanvas(newCanvas) {
     canvas = newCanvas;
-    if (canvas.getContext) {
+
+   if (canvas.getContext) {
 	ctx = canvas.getContext("2d");
     } else {
 	console.error("Unable to get 2d context from canvas");
@@ -115,4 +179,8 @@ function moveRight() {
     }
 }
 
-export {start, stop, moveLeft, moveRight, setCanvas};
+function launchBall() {
+    ball.inMotion = true;
+}
+
+export {start, stop, moveLeft, moveRight, launchBall, setCanvas};

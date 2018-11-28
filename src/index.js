@@ -9,6 +9,8 @@ import * as Breakout from './breakout.js';
 	    breakout.moveLeft();
 	} else if (event.keyCode == 39) {
 	    breakout.moveRight();
+	} else if (event.keyCode == 32) {
+	    breakout.launchBall();
 	}
     }, false);
     
