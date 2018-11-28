@@ -103,7 +103,7 @@ function panic() {
 }
 
 function update(delta) {
-    ball.update(canvas, delta, bat);
+    ball.update(canvas, delta, bat, blocks);
 }
 
 function render() {

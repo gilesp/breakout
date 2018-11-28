@@ -21,7 +21,7 @@ class Ball {
 	this.vy = -0.2;
     }
 
-    update(canvas, delta, bat) {
+    update(canvas, delta, bat, blocks) {
 	if (!this.inMotion) {
 	    // follow the bat.
 	    this.x = bat.x + (bat.width / 2);
@@ -43,7 +43,16 @@ class Ball {
 	    (this.x >= bat.x && this.x <= bat.x + bat.width)) {
 	    this.vy = -this.vy;
 	}
-
+	
+	//insanely inefficient collision detection for the blocks
+	blocks.forEach(function (block) {
+	    //console.log(`ball ${this.x}, ${this.y} : block ${block.x}, ${block.y}`);
+	    if (this.y === (block.y + block.height) &&
+		(this.x >= block.x && this.x <= block.x + block.width)) {
+		this.vy = -this.vy;
+	    }
+	}, this);
+	
 	// the ball has gone out of bounds
 	if (this.y >= canvas.height) {
 	    this.initialise(bat);
