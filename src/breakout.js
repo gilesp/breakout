@@ -9,7 +9,7 @@ var bat = {
     height: 5,
     x: 0,
     y: 0,
-    velocity: 1.5,
+    velocity: 2,
     draw: function (ctx) {
 	ctx.fillStyle = 'rgb(200, 200, 200)';
 	ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -39,31 +39,31 @@ var ball = {
 	this.vy = -0.2;
     },
     update: function (delta) {
-	if (this.inMotion) {
-	    this.x += this.vx * delta;
-	    this.y += this.vy * delta;
-
-	    if (this.x <= 0 || this.x >= canvas.width) {
-		this.vx = -this.vx;
-	    }
-
-	    if (this.y <= 0) {
-		this.vy = -this.vy;
-	    }
-
-	    //primitive collision detection with bat
-	    if (this.y === (bat.y - this.radius) &&
-		(this.x >= bat.x && this.x <= bat.x + bat.width)) {
-		this.vy = -this.vy;
-	    }
-
-	    // the ball has gone out of bounds
-	    if (this.y >= canvas.height) {
-		this.initialise();
-	    }
-	} else {
+	if (!this.inMotion) {
 	    // follow the bat.
 	    this.x = bat.x + (bat.width / 2);
+	    return;
+	}
+	this.x += this.vx * delta;
+	this.y += this.vy * delta;
+
+	if (this.x <= 0 || this.x >= canvas.width) {
+	    this.vx = -this.vx;
+	}
+
+	if (this.y <= 0) {
+	    this.vy = -this.vy;
+	}
+
+	//primitive collision detection with bat
+	if (this.y === (bat.y - this.radius) &&
+	    (this.x >= bat.x && this.x <= bat.x + bat.width)) {
+	    this.vy = -this.vy;
+	}
+
+	// the ball has gone out of bounds
+	if (this.y >= canvas.height) {
+	    this.initialise();
 	}
     }
 };
