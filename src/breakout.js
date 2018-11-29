@@ -74,24 +74,26 @@ function start() {
 
     //create blocks;
     // TODO: make this less crap ;-)
-    var i;
-    var row;
-    var xPos = 20;
-    var yPos = 50;
+    var columns = 10;
+    var rows = 5;
+    var offsetTop = 50;
+    var offsetLeft = 22;
+    var padding = 5;
     var colors = ['rgb(230, 0, 0)', 'rgb(230, 115, 0)', 'rgb(230, 230, 0)', 'rgb(38, 230, 0)', 'rgb(0, 38, 230)'];
     var blockWidth = 55;
     var blockHeight = 25;
 
-    
-    for (row = 0; row < 5; row++) {
-	xPos = 20;
-	for (i = 0; i < 10; i++) {
-	    blocks.push(new Block(xPos, yPos, blockWidth, blockHeight, colors[row]));
-	    xPos += blockWidth + 5;
+    for (var c = 0; c < columns; c++) {
+	blocks[c] = [];
+	for (var r = 0; r < rows; r++) {
+	    blocks[c][r] = new Block((c * (blockWidth + padding))+offsetLeft,
+				     (r * (blockHeight + padding))+offsetTop,
+				     blockWidth,
+				     blockHeight,
+				     colors[r]);
 	}
-	yPos += blockHeight + 5;
     }
-    
+
     // setup initial positions
     bat.x = (canvas.width / 2) - (bat.width / 2);
     bat.y = canvas.height - 20;
@@ -119,13 +121,16 @@ function update(timestep) {
     }
     
     ball.update(canvas, timestep, bat, blocks);
+
     //insanely inefficient collision detection for the blocks
-    blocks.forEach(function (block, index) {
-	if (block.check(ball.x - ball.radius, ball.y)) {
-	    delete blocks[index];
-	    ball.vy = -ball.vy;
-	    score += 5;
-	}
+    blocks.forEach(function (row, c) {
+	row.forEach(function (block, r) {
+	    if (block.check(ball.x - ball.radius, ball.y)) {
+		delete blocks[c][r];
+		ball.vy = -ball.vy;
+		score += 5;
+	    }
+	});
     });
 }
 
@@ -137,8 +142,10 @@ function render() {
 
 	ball.draw(ctx);
 
-	blocks.forEach(function (block) {
-	    block.draw(ctx);
+	blocks.forEach(function (row) {
+	    row.forEach(function (block) {
+		block.draw(ctx);
+	    });
 	});
 
 	ctx.fillStyle = 'rgb(255, 255, 255)';

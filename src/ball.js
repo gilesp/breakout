@@ -41,12 +41,12 @@ class Ball {
 
 	//primitive collision detection with bat
 	if (this.y === (bat.y - this.radius) &&
-	    (this.x >= bat.x && this.x <= bat.x + bat.width)) {
+	    (this.x > bat.x && this.x < bat.x + bat.width)) {
 	    this.vy = -this.vy;
 	}
 	
 	// the ball has gone out of bounds
-	if (this.y >= canvas.height) {
+	if (this.y >= canvas.height - this.radius) {
 	    this.initialise(bat);
 	}
     }
