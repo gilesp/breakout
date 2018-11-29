@@ -4,7 +4,7 @@ class Bat {
 	this.height = height;
 	this.xPos = 0;
 	this.yPos = 0;
-	this.vx = 2;
+	this.vx = 0.8;
     }
 
     get x() {

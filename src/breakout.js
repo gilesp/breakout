@@ -2,7 +2,7 @@ import Bat from './bat.js';
 import Ball from './ball.js';
 import Block from './block.js';
 
-var bat = new Bat(60, 8);
+var bat = new Bat(75, 10);
 var ball = new Ball(bat, 7, 'rgb(200, 0, 0)');
 var blocks = [];
 
@@ -25,6 +25,9 @@ var fps = 60,
     lastFrameTime = 0;
 
 var score = 0;
+
+var movingLeft = false;
+var movingRight = false;
 
 function main(timestamp) {
     // Throttle the frame rate.
@@ -106,8 +109,16 @@ function panic() {
     delta = 0;
 }
 
-function update(delta) {
-    ball.update(canvas, delta, bat, blocks);
+function update(timestep) {
+    if (movingLeft && bat.x > 0) {
+	bat.x -= bat.velocity * timestep;
+    }
+
+    if (movingRight && bat.x < (canvas.width - bat.width)) {
+	bat.x += bat.velocity * timestep;
+    }
+    
+    ball.update(canvas, timestep, bat, blocks);
     //insanely inefficient collision detection for the blocks
     blocks.forEach(function (block, index) {
 	if (block.check(ball.x - ball.radius, ball.y)) {
@@ -142,26 +153,22 @@ function setCanvas(newCanvas) {
     canvas = newCanvas;
 
    if (canvas.getContext) {
-	ctx = canvas.getContext("2d");
+       ctx = canvas.getContext("2d", { alpha: false });
     } else {
 	console.error("Unable to get 2d context from canvas");
     }
 }
 
-function moveLeft() {
-    if (bat.x > 0) {
-	bat.x -= bat.velocity * timestep;
-    }
+function setMovingLeft(move) {
+    movingLeft = move;
 }
 
-function moveRight() {
-    if (bat.x < 590) {
-	bat.x += bat.velocity * timestep;
-    }
+function setMovingRight(move) {
+    movingRight = move;
 }
 
 function launchBall() {
     ball.inMotion = true;
 }
 
-export {start, stop, moveLeft, moveRight, launchBall, setCanvas};
+export {start, stop, setMovingLeft, setMovingRight, launchBall, setCanvas};

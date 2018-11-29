@@ -4,14 +4,24 @@ import * as Breakout from './breakout.js';
     breakout.setCanvas(document.getElementById('breakout'));
     breakout.start();
 
-    document.addEventListener('keydown', function (event) {
-	if (event.keyCode == 37) {
-	    breakout.moveLeft();
-	} else if (event.keyCode == 39) {
-	    breakout.moveRight();
-	} else if (event.keyCode == 32) {
+    document.addEventListener('keydown', keyDownHandler, false);
+    document.addEventListener('keyup', keyUpHandler, false);
+
+    function keyDownHandler(e) {
+	if (e.keyCode == 37) {
+	    breakout.setMovingLeft(true);
+	} else if (e.keyCode == 39) {
+	    breakout.setMovingRight(true);
+	} else if (e.keyCode == 32) {
 	    breakout.launchBall();
 	}
-    }, false);
-    
+    }
+
+    function keyUpHandler(e) {
+	if (e.keyCode == 37) {
+	    breakout.setMovingLeft(false);
+	} else if (e.keyCode == 39) {
+	    breakout.setMovingRight(false);
+	}
+    }
 })(Breakout);
