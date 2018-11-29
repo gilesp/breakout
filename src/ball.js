@@ -27,14 +27,15 @@ class Ball {
 	    this.x = bat.x + (bat.width / 2);
 	    return;
 	}
+
 	this.x += this.vx * delta;
 	this.y += this.vy * delta;
 
-	if (this.x <= 0 || this.x >= canvas.width) {
+	if (this.x <= this.radius || this.x >= canvas.width - this.radius) {
 	    this.vx = -this.vx;
 	}
 
-	if (this.y <= 0) {
+	if (this.y <= this.radius) {
 	    this.vy = -this.vy;
 	}
 
