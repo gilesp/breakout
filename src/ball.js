@@ -50,6 +50,15 @@ class Ball {
 	    this.initialise(bat);
 	}
     }
+
+    bounds() {
+	return {
+	    x1: this.x - this.radius,
+	    y1: this.y - this.radius,
+	    x2: this.x + this.radius,
+	    y2: this.x + this.radius
+	};
+    }
 }
 
 export default Ball;
