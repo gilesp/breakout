@@ -83,14 +83,13 @@ function start() {
     var blockWidth = 55;
     var blockHeight = 25;
 
-    for (var c = 0; c < columns; c++) {
-	blocks[c] = [];
-	for (var r = 0; r < rows; r++) {
-	    blocks[c][r] = new Block((c * (blockWidth + padding))+offsetLeft,
+    for (var r = 0; r < rows; r++) {
+	for (var c = 0; c < columns; c++) {
+	    blocks.push(new Block((c * (blockWidth + padding))+offsetLeft,
 				     (r * (blockHeight + padding))+offsetTop,
 				     blockWidth,
 				     blockHeight,
-				     colors[r]);
+				  colors[r]));
 	}
     }
 
@@ -123,14 +122,12 @@ function update(timestep) {
     ball.update(canvas, timestep, bat, blocks);
 
     //insanely inefficient collision detection for the blocks
-    blocks.forEach(function (row, c) {
-	row.forEach(function (block, r) {
-	    if (block.check(ball.x - ball.radius, ball.y)) {
-		delete blocks[c][r];
-		ball.vy = -ball.vy;
-		score += 5;
-	    }
-	});
+    blocks.forEach(function (block, index) {
+	if (block.check(ball.x - ball.radius, ball.y)) {
+	    delete blocks[index];
+	    ball.vy = -ball.vy;
+	    score += 5;
+	}
     });
 }
 
@@ -142,10 +139,8 @@ function render() {
 
 	ball.draw(ctx);
 
-	blocks.forEach(function (row) {
-	    row.forEach(function (block) {
-		block.draw(ctx);
-	    });
+	blocks.forEach(function (block) {
+	    block.draw(ctx);
 	});
 
 	ctx.fillStyle = 'rgb(255, 255, 255)';
@@ -159,8 +154,8 @@ function render() {
 function setCanvas(newCanvas) {
     canvas = newCanvas;
 
-   if (canvas.getContext) {
-       ctx = canvas.getContext("2d", { alpha: false });
+    if (canvas.getContext) {
+	ctx = canvas.getContext("2d", { alpha: false });
     } else {
 	console.error("Unable to get 2d context from canvas");
     }
