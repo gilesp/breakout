@@ -110,7 +110,6 @@ function panic() {
     delta = 0;
 }
 
-var collision = false;
 function update(timestep) {
     if (movingLeft && bat.x > 0) {
 	bat.x -= bat.velocity * timestep;
@@ -121,38 +120,37 @@ function update(timestep) {
     }
 
     //insanely inefficient collision detection for the blocks
+
+    var ballx = 0,
+	bally = 0;
     blocks.forEach(function (block, index) {
-	// https://happycoding.io/tutorials/processing/collision-detection
-	// TODO: re-read and implement properly.
-	/*
-	var vx = ball.vx * timestep;
-	if (ball.bounds.x2 + vx > block.bounds.x1 &&
-	    ball.bounds.x1 + vx < block.bounds.x2 &&
-	    ball.bounds.y2 > block.bounds.y1 &&
-	    ball.bounds.y1 < block.bounds.y2) {
+
+	ballx = ball.x + (ball.vx * timestep);
+	bally = ball.y + (ball.vy * timestep);
+	var hit = false;
+	if (ballx >= block.x &&
+	    ballx <= block.x + block.width &&
+	    ball.y >= block.y &&
+	    ball.y <= block.y + block.height) {
 	    ball.vx = -ball.vx;
+	    hit = true;
 	}
 
-	var vy = ball.vy * timestep;
-	if (ball.bounds.x2 > block.bounds.x1 &&
-	    ball.bounds.x1 < block.bounds.x2 &&
-	    ball.bounds.y2 + vy > block.bounds.y1 &&
-	    ball.bounds.y1 + vy < block.bounds.y2) {
+	if (bally >= block.y &&
+	    bally <= block.y + block.height &&
+	    ball.x >= block.x &&
+	    ball.x <= block.x + block.width) {
 	    ball.vy = -ball.vy;
+	    hit = true
 	}
-	*/
-	
-	if (block.check(ball.x - ball.radius, ball.y)) {
+
+	if (hit) {
 	    delete blocks[index];
-	    ball.vy = -ball.vy;
 	    score += 5;
 	}
-	
     });
 
-    if (!collision) {
-	ball.update(canvas, timestep, bat, blocks);
-    }
+    ball.update(canvas, timestep, bat, blocks);
 }
 
 function render() {
@@ -194,7 +192,6 @@ function setMovingRight(move) {
 }
 
 function launchBall() {
-    collision = false;
     ball.inMotion = true;
 }
 

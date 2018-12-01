@@ -41,7 +41,7 @@ class Ball {
 
 	//primitive collision detection with bat
 	if (this.y === (bat.y - this.radius) &&
-	    (this.x > bat.x && this.x < bat.x + bat.width)) {
+	    (this.x >= bat.x && this.x <= bat.x + bat.width)) {
 	    this.vy = -this.vy;
 	}
 	
