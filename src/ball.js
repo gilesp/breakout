@@ -13,15 +13,15 @@ class Ball {
 	context.fill();
     }
 
-    initialise(bat) {
+    initialise(bat, vx, vy) {
 	this.inMotion = false;
 	this.x = bat.x + (bat.width / 2);
 	this.y = bat.y - this.radius;
-	this.vx = 0.2;
-	this.vy = -0.2;
+	this.vx = vx ? vx : 0.2;
+	this.vy = vy ? vy : -0.2;
     }
 
-    update(canvas, delta, bat, blocks) {
+    update(canvas, delta, bat) {
 	if (!this.inMotion) {
 	    // follow the bat.
 	    this.x = bat.x + (bat.width / 2);
@@ -40,14 +40,16 @@ class Ball {
 	}
 
 	//primitive collision detection with bat
+	/*
 	if (this.y === (bat.y - this.radius) &&
 	    (this.x >= bat.x && this.x <= bat.x + bat.width)) {
 	    this.vy = -this.vy;
 	}
+	*/
 	
 	// the ball has gone out of bounds
 	if (this.y >= canvas.height - this.radius) {
-	    this.initialise(bat);
+	    this.initialise(bat, Math.abs(this.vx), -Math.abs(this.vy));
 	}
     }
 

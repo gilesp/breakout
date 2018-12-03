@@ -111,6 +111,7 @@ function panic() {
     delta = 0;
 }
 
+var hitcount = 0;
 function update(timestep) {
     if (movingLeft && bat.x > 0) {
 	bat.x -= bat.vx * timestep;
@@ -121,37 +122,60 @@ function update(timestep) {
     }
 
     //insanely inefficient collision detection for the blocks
-
-    var ballx = 0,
-	bally = 0;
+    var ballx = ball.x + (ball.vx * timestep),
+	bally = ball.y + (ball.vy * timestep),
+	newVectors;
     blocks.forEach(function (block, index) {
+	newVectors = calculateBallVector(ball, ballx, bally, block);
 
-	ballx = ball.x + (ball.vx * timestep);
-	bally = ball.y + (ball.vy * timestep);
-	var hit = false;
-	if (ballx >= block.x &&
-	    ballx <= block.x + block.width &&
-	    ball.y >= block.y &&
-	    ball.y <= block.y + block.height) {
-	    ball.vx = -ball.vx;
-	    hit = true;
-	}
-
-	if (bally >= block.y &&
-	    bally <= block.y + block.height &&
-	    ball.x >= block.x &&
-	    ball.x <= block.x + block.width) {
-	    ball.vy = -ball.vy;
-	    hit = true;
-	}
-
-	if (hit) {
+	ball.vx = newVectors.vx;
+	ball.vy = newVectors.vy;
+	
+	if (newVectors.change) {
 	    score += blocks[index].score;
 	    delete blocks[index];
+	    hitcount++;
+	    if(hitcount === 4 || hitcount === 12) {
+		ball.vx = ball.vx + (ball.vx > 0 ? 0.05 : -0.05);
+		ball.vy = ball.vy + (ball.vy > 0 ? 0.05 : -0.05);
+	    }
 	}
     });
 
-    ball.update(canvas, timestep, bat, blocks);
+    newVectors = calculateBallVector(ball, ballx, bally, bat);
+    ball.vx = newVectors.vx;
+    ball.vy = newVectors.vy;
+    
+    ball.update(canvas, timestep, bat);
+}
+
+function calculateBallVector(ball, future_x, future_y, target) {
+    var result = {
+	vx: ball.vx,
+	vy: ball.vy,
+	change: false
+    };
+
+    var targetx = target.x - ball.radius;
+    var targety = target.y - ball.radius;
+    
+    if (future_x > targetx &&
+	future_x < targetx + target.width &&
+	ball.y > targety &&
+	ball.y < targety + target.height) {
+	result.vx = -ball.vx;
+	result.change = true;
+    }
+
+    if (future_y > targety &&
+	future_y < targety + target.height &&
+	ball.x > targetx &&
+	ball.x < targetx + target.width) {
+	result.vy = -ball.vy;
+	result.change = true;
+    }
+
+    return result;
 }
 
 function render() {
@@ -170,7 +194,7 @@ function render() {
 	ctx.font = '22px sans';
 	ctx.fillText('Score: ' + score, 20, 25);
 	//display fps
-	fpsDisplay.textContent = Math.round(fps) + ' FPS';
+	fpsDisplay.textContent = Math.round(fps) + ' FPS' + ' Hitcount: ' + hitcount + ' vx,vy: ' + ball.vx + ',' + ball.vy;
     }
 }
 
