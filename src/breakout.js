@@ -112,11 +112,11 @@ function panic() {
 
 function update(timestep) {
     if (movingLeft && bat.x > 0) {
-	bat.x -= bat.velocity * timestep;
+	bat.x -= bat.vx * timestep;
     }
 
     if (movingRight && bat.x < (canvas.width - bat.width)) {
-	bat.x += bat.velocity * timestep;
+	bat.x += bat.vx * timestep;
     }
 
     //insanely inefficient collision detection for the blocks
