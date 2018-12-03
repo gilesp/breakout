@@ -73,23 +73,24 @@ function start() {
     }
 
     //create blocks;
-    // TODO: make this less crap ;-)
     var columns = 10;
-    var rows = 5;
-    var offsetTop = 50;
-    var offsetLeft = 22;
-    var padding = 5;
-    var colors = ['rgb(230, 0, 0)', 'rgb(230, 115, 0)', 'rgb(230, 230, 0)', 'rgb(38, 230, 0)', 'rgb(0, 38, 230)'];
-    var blockWidth = 55;
-    var blockHeight = 25;
+    var rows = 8;
+    var offsetTop = 40;
+    var offsetLeft = 2;
+    var padding = 4;
+    var colors = ['rgb(230, 0, 0)', 'rgb(230, 0, 0)', 'rgb(230, 115, 0)', 'rgb(230, 115, 0)', 'rgb(230, 230, 0)', 'rgb(230, 230, 0)', 'rgb(38, 230, 0)', 'rgb(38, 230, 0)'];
+    var scores = [7, 7, 5, 5, 3, 3, 1, 1];
+    var blockWidth = 60;
+    var blockHeight = 20;
 
     for (var r = 0; r < rows; r++) {
 	for (var c = 0; c < columns; c++) {
 	    blocks.push(new Block((c * (blockWidth + padding))+offsetLeft,
-				     (r * (blockHeight + padding))+offsetTop,
-				     blockWidth,
-				     blockHeight,
-				  colors[r]));
+				  (r * (blockHeight + padding))+offsetTop,
+				  blockWidth,
+				  blockHeight,
+				  colors[r],
+				  scores[r]));
 	}
     }
 
@@ -141,12 +142,12 @@ function update(timestep) {
 	    ball.x >= block.x &&
 	    ball.x <= block.x + block.width) {
 	    ball.vy = -ball.vy;
-	    hit = true
+	    hit = true;
 	}
 
 	if (hit) {
+	    score += blocks[index].score;
 	    delete blocks[index];
-	    score += 5;
 	}
     });
 
