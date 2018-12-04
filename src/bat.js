@@ -5,6 +5,8 @@ class Bat {
 	this.x = 0;
 	this.y = 0;
 	this.vx = 0.8;
+	this.movingLeft = false;
+	this.movingRight = false;
     }
 
     draw(context) {

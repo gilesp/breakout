@@ -26,9 +26,6 @@ var fps = 60,
 
 var score = 0;
 
-var movingLeft = false;
-var movingRight = false;
-
 function main(timestamp) {
     // Throttle the frame rate.
     if (timestamp < (lastFrameTime + timestep)) {
@@ -113,14 +110,6 @@ function panic() {
 
 var hitcount = 0;
 function update(timestep) {
-    if (movingLeft && bat.x > 0) {
-	bat.x -= bat.vx * timestep;
-    }
-
-    if (movingRight && bat.x < (canvas.width - bat.width)) {
-	bat.x += bat.vx * timestep;
-    }
-
     //insanely inefficient collision detection for the blocks
     var ballx = ball.x + (ball.vx * timestep),
 	bally = ball.y + (ball.vy * timestep),
@@ -145,7 +134,15 @@ function update(timestep) {
     newVectors = calculateBallVector(ball, ballx, bally, bat);
     ball.vx = newVectors.vx;
     ball.vy = newVectors.vy;
-    
+
+    if (bat.movingLeft && bat.x > 0) {
+	bat.x -= bat.vx * timestep;
+    }
+
+    if (bat.movingRight && bat.x < (canvas.width - bat.width)) {
+	bat.x += bat.vx * timestep;
+    }
+
     ball.update(canvas, timestep, bat);
 }
 
@@ -209,11 +206,11 @@ function setCanvas(newCanvas) {
 }
 
 function setMovingLeft(move) {
-    movingLeft = move;
+    bat.movingLeft = move;
 }
 
 function setMovingRight(move) {
-    movingRight = move;
+    bat.movingRight = move;
 }
 
 function launchBall() {
