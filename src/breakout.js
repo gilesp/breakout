@@ -113,6 +113,14 @@ function panic() {
 
 var hitcount = 0;
 function update(timestep) {
+    if (bat.movingLeft && bat.x > 0) {
+	bat.x -= bat.vx * timestep;
+    }
+
+    if (bat.movingRight && bat.x < (canvas.width - bat.width)) {
+	bat.x += bat.vx * timestep;
+    }
+
     //insanely inefficient collision detection for the blocks
     var ballx = ball.x + (ball.vx * timestep),
 	bally = ball.y + (ball.vy * timestep),
@@ -137,14 +145,6 @@ function update(timestep) {
     newVectors = calculateBallVector(ball, ballx, bally, bat);
     ball.vx = newVectors.vx;
     ball.vy = newVectors.vy;
-
-    if (bat.movingLeft && bat.x > 0) {
-	bat.x -= bat.vx * timestep;
-    }
-
-    if (bat.movingRight && bat.x < (canvas.width - bat.width)) {
-	bat.x += bat.vx * timestep;
-    }
 
     ball.update(canvas, timestep, bat);
 }
