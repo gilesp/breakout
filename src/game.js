@@ -78,6 +78,10 @@ class Game {
 	this.main(0);
     }
 
+    stop() {
+	window.cancelAnimationFrame(this.state.token);
+    };
+
     render() {
 	if (this.context) {
 	    this.context.clearRect(0, 0, 640, 480);
