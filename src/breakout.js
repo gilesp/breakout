@@ -32,7 +32,7 @@ var score = 0;
 function main(timestamp) {
     // Throttle the frame rate.
     if (timestamp < (lastFrameTime + timestep)) {
-        animationToken = requestAnimationFrame(main);
+        animationToken = window.requestAnimationFrame(main);
         return;
     }
     delta += timestamp - lastFrameTime;
