@@ -10,7 +10,10 @@ var animationToken;
 var canvas = { width: 640, height: 480 }; //fake it until set properly
 var ctx;
 
-var fpsDisplay = document.getElementById('fpsDisplay');
+var debug = {
+    enabled: true,
+    fpsElement: document.getElementById('fpsDisplay')
+};
 
 // The maximum FPS we want to allow
 var maxFPS = 60; 
@@ -191,7 +194,9 @@ function render() {
 	ctx.font = '22px sans';
 	ctx.fillText('Score: ' + score, 20, 25);
 	//display fps
-	fpsDisplay.textContent = Math.round(fps) + ' FPS' + ' Hitcount: ' + hitcount + ' vx,vy: ' + ball.vx + ',' + ball.vy;
+	if (debug.enabled) {
+	    debug.fpsElement.textContent = Math.round(fps) + ' FPS' + ' Hitcount: ' + hitcount + ' vx,vy: ' + ball.vx + ',' + ball.vy;
+	}
     }
 }
 
@@ -217,4 +222,8 @@ function launchBall() {
     ball.inMotion = true;
 }
 
-export {start, stop, setMovingLeft, setMovingRight, launchBall, setCanvas};
+function toggleDebug() {
+    debug.enabled = !debug.enabled;
+}
+
+export {start, stop, setMovingLeft, setMovingRight, launchBall, setCanvas, toggleDebug};
